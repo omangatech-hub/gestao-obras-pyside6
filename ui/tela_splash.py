@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import QSplashScreen
 from PySide6.QtGui import QPixmap, QFont, QColor
-from PySide6.QtCore import Qt, QTimer
+from PySide6.QtCore import Qt, QTimer, QScreen
 import os
 
 class TelaSplash:
@@ -8,31 +8,32 @@ class TelaSplash:
     
     @staticmethod
     def criar_splash(app):
-        """Cria e exibe a tela de splash"""
+        """Cria e exibe a tela de splash em tela cheia"""
         
-        # Tenta carregar a imagem
-        caminho_imagem = os.path.join(os.path.dirname(__file__), '..', 'assets', 'splash.png')
+        # Obtém o tamanho da tela (monitor)
+        screen: QScreen = app.primaryScreen()
+        screen_geometry = screen.geometry()
+        screen_width = screen_geometry.width()
+        screen_height = screen_geometry.height()
         
-        if os.path.exists(caminho_imagem):
-            pixmap = QPixmap(caminho_imagem)
-        else:
-            # Se não existir imagem, cria um fundo padrão
-            pixmap = QPixmap(800, 600)
-            pixmap.fill(QColor(255, 255, 255))  # Branco
+        # Cria pixmap com tamanho da tela
+        pixmap = QPixmap(screen_width, screen_height)
+        pixmap.fill(QColor(255, 255, 255))  # Fundo branco
         
         splash = QSplashScreen(pixmap)
-        splash.show()
+        splash.setWindowFlags(splash.windowFlags() | Qt.FramelessWindowHint)
+        splash.showFullScreen()
         app.processEvents()
         
-        # Adiciona texto
+        # Adiciona texto no centro da tela
         font = QFont()
-        font.setPointSize(14)
+        font.setPointSize(24)
         font.setBold(True)
         splash.setFont(font)
         splash.showMessage(
             "Gestão de Obras PySide6",
-            Qt.AlignBottom | Qt.AlignCenter,
-            QColor(255, 255, 255)
+            Qt.AlignCenter,
+            QColor(0, 0, 0)  # Texto preto para contraste com fundo branco
         )
         
         app.processEvents()
