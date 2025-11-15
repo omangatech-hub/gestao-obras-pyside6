@@ -18,8 +18,8 @@ class MateriaisView(QWidget):
         self.layout.addLayout(h)
 
         self.table = QTableWidget()
-        self.table.setColumnCount(5)
-        self.table.setHorizontalHeaderLabels(["ID","Código","Descrição","Unidade","Estoque"])
+        self.table.setColumnCount(4)
+        self.table.setHorizontalHeaderLabels(["ID","Código","Descrição","Unidade"])
         self.layout.addWidget(self.table)
         self.setLayout(self.layout)
 
@@ -39,7 +39,6 @@ class MateriaisView(QWidget):
             self.table.setItem(r,1, QTableWidgetItem(m.get("codigo") or ""))
             self.table.setItem(r,2, QTableWidgetItem(m.get("descricao") or ""))
             self.table.setItem(r,3, QTableWidgetItem(m.get("unidade") or ""))
-            self.table.setItem(r,4, QTableWidgetItem(str(m.get("estoque") or 0)))
 
     def novo_material(self):
         dlg = QDialog(self)
@@ -48,12 +47,9 @@ class MateriaisView(QWidget):
         txtCodigo = QLineEdit()
         txtDesc = QLineEdit()
         txtUnid = QLineEdit()
-        spinEst = QDoubleSpinBox()
-        spinEst.setMaximum(1e9)
         form.addRow("Código:", txtCodigo)
         form.addRow("Descrição:", txtDesc)
         form.addRow("Unidade:", txtUnid)
-        form.addRow("Estoque:", spinEst)
         btnSalvar = QPushButton("Salvar")
         btnCancelar = QPushButton("Cancelar")
         h = QHBoxLayout()
@@ -65,11 +61,10 @@ class MateriaisView(QWidget):
             codigo = txtCodigo.text().strip()
             desc = txtDesc.text().strip()
             unid = txtUnid.text().strip()
-            est = spinEst.value()
             if not desc:
                 QMessageBox.warning(self, "Erro", "Descrição obrigatória")
                 return
-            self.material_controller.criar_material(codigo, desc, unid, est)
+            self.material_controller.criar_material(codigo, desc, unid)
             dlg.accept()
             self.load()
 
@@ -88,18 +83,14 @@ class MateriaisView(QWidget):
         txtCodigo = QLineEdit()
         txtDesc = QLineEdit()
         txtUnid = QLineEdit()
-        spinEst = QDoubleSpinBox()
-        spinEst.setMaximum(1e9)
         
         txtCodigo.setText(material.get("codigo") or "")
         txtDesc.setText(material.get("descricao") or "")
         txtUnid.setText(material.get("unidade") or "")
-        spinEst.setValue(material.get("estoque") or 0)
         
         form.addRow("Código:", txtCodigo)
         form.addRow("Descrição:", txtDesc)
         form.addRow("Unidade:", txtUnid)
-        form.addRow("Estoque:", spinEst)
         btnSalvar = QPushButton("Salvar")
         btnCancelar = QPushButton("Cancelar")
         h = QHBoxLayout()
@@ -111,11 +102,10 @@ class MateriaisView(QWidget):
             codigo = txtCodigo.text().strip()
             desc = txtDesc.text().strip()
             unid = txtUnid.text().strip()
-            est = spinEst.value()
             if not desc:
                 QMessageBox.warning(self, "Erro", "Descrição obrigatória")
                 return
-            self.material_controller.atualizar(material_id, codigo=codigo, descricao=desc, unidade=unid, estoque=est)
+            self.material_controller.atualizar(material_id, codigo=codigo, descricao=desc, unidade=unid)
             dlg.accept()
             self.load()
 

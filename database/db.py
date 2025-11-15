@@ -70,8 +70,7 @@ class Database:
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 codigo TEXT,
                 descricao TEXT,
-                unidade TEXT,
-                estoque REAL DEFAULT 0
+                unidade TEXT
             );
             """,
             """

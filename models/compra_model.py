@@ -8,8 +8,6 @@ class CompraModel:
         VALUES (?, ?, ?, ?, ?, ?, ?)
         """
         cur = self.db.execute(q, (material_id, obra_id, quantidade, fornecedor, data_compra, valor_total, status))
-        # adjust stock
-        self.db.execute("UPDATE materiais SET estoque = estoque + ? WHERE id = ?", (quantidade, material_id))
         return cur.lastrowid
 
     def get_all(self):
@@ -24,7 +22,4 @@ class CompraModel:
         return self.db.fetchall(q)
 
     def delete(self, compra_id):
-        comp = self.db.fetchone("SELECT material_id, quantidade FROM compras WHERE id = ?", (compra_id,))
-        if comp:
-            self.db.execute("UPDATE materiais SET estoque = estoque - ? WHERE id = ?", (comp['quantidade'], comp['material_id']))
         self.db.execute("DELETE FROM compras WHERE id = ?", (compra_id,))

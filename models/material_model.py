@@ -2,9 +2,9 @@ class MaterialModel:
     def __init__(self, db):
         self.db = db
 
-    def create(self, codigo, descricao, unidade, estoque=0):
-        q = "INSERT INTO materiais (codigo, descricao, unidade, estoque) VALUES (?, ?, ?, ?)"
-        cur = self.db.execute(q, (codigo, descricao, unidade, estoque))
+    def criar_material(self, codigo, descricao, unidade):
+        q = "INSERT INTO materiais (codigo, descricao, unidade) VALUES (?, ?, ?)"
+        cur = self.db.execute(q, (codigo, descricao, unidade))
         return cur.lastrowid
 
     def get_all(self):
@@ -23,8 +23,7 @@ class MaterialModel:
         q = f"UPDATE materiais SET {', '.join(cols)} WHERE id = ?"
         self.db.execute(q, tuple(vals))
 
-    def adjust_stock(self, material_id, delta):
-        self.db.execute("UPDATE materiais SET estoque = estoque + ? WHERE id = ?", (delta, material_id))
-
     def delete(self, material_id):
         self.db.execute("DELETE FROM materiais WHERE id = ?", (material_id,))
+
+
