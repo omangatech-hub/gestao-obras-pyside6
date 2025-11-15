@@ -13,11 +13,11 @@ class MainWindow(QMainWindow):
         self.controllers = controllers
         self.setWindowTitle("Gestão de Obras - MVP (PySide6)")
         
-        # Obter tamanho da tela (monitor)
+        # Obter tamanho da tela (monitor) - área UTILIZÁVEL (sem barra de tarefas)
         screen = self.screen()
-        screen_geom = screen.geometry()
+        screen_geom = screen.availableGeometry()  # Área disponível (sem taskbar)
         
-        # Abrir com o tamanho TOTAL da tela
+        # Abrir com o tamanho DISPONÍVEL da tela
         self.resize(screen_geom.width(), screen_geom.height())
         self.move(screen_geom.x(), screen_geom.y())
 
@@ -45,24 +45,24 @@ class MainWindow(QMainWindow):
         
         self.btnObras = QPushButton("Obras")
         self.btnObras.setFont(font_botoes)
-        self.btnObras.setMinimumHeight(35)
-        self.btnObras.setMaximumHeight(35)
+        self.btnObras.setMinimumHeight(32)
+        self.btnObras.setMaximumHeight(32)
         self.btnMateriais = QPushButton("Materiais")
         self.btnMateriais.setFont(font_botoes)
-        self.btnMateriais.setMinimumHeight(35)
-        self.btnMateriais.setMaximumHeight(35)
+        self.btnMateriais.setMinimumHeight(32)
+        self.btnMateriais.setMaximumHeight(32)
         self.btnCompras = QPushButton("Compras")
         self.btnCompras.setFont(font_botoes)
-        self.btnCompras.setMinimumHeight(35)
-        self.btnCompras.setMaximumHeight(35)
+        self.btnCompras.setMinimumHeight(32)
+        self.btnCompras.setMaximumHeight(32)
         self.btnFinanceiro = QPushButton("Despesas / Financeiro")
         self.btnFinanceiro.setFont(font_botoes)
-        self.btnFinanceiro.setMinimumHeight(35)
-        self.btnFinanceiro.setMaximumHeight(35)
+        self.btnFinanceiro.setMinimumHeight(32)
+        self.btnFinanceiro.setMaximumHeight(32)
         self.btnEVM = QPushButton("Painel EVM")
         self.btnEVM.setFont(font_botoes)
-        self.btnEVM.setMinimumHeight(35)
-        self.btnEVM.setMaximumHeight(35)
+        self.btnEVM.setMinimumHeight(32)
+        self.btnEVM.setMaximumHeight(32)
         
         menu_layout.addWidget(self.btnObras)
         menu_layout.addWidget(self.btnMateriais)
