@@ -16,7 +16,8 @@ class GerenciadorExcel:
             self.df = pd.read_excel(caminho_arquivo)
             
             # Normaliza nomes de colunas
-            self.df.columns = [col.strip().lower().replace(' ', '_') for col in self.df.columns]
+            colunas_originais = self.df.columns.tolist()
+            self.df.columns = [col.strip().lower().replace(' ', '_').replace('ã', 'a').replace('á', 'a').replace('ç', 'c') for col in self.df.columns]
             
             # Encontra as colunas
             colunas_presentes = list(self.df.columns)
@@ -27,7 +28,7 @@ class GerenciadorExcel:
             }
             
             for col in colunas_presentes:
-                col_lower = col.lower().replace('ã', 'a').replace('á', 'a')
+                col_lower = col.lower()
                 if 'cod' in col_lower:
                     mapa_colunas['codigo'] = col
                 elif 'desc' in col_lower:
@@ -35,8 +36,12 @@ class GerenciadorExcel:
                 elif 'unid' in col_lower:
                     mapa_colunas['unidade'] = col
             
-            if not all([mapa_colunas['codigo'], mapa_colunas['descricao'], mapa_colunas['unidade']]):
-                return False, "Colunas obrigatórias não encontradas: Código, Descrição, Unidade"
+            colunas_encontradas = [k for k, v in mapa_colunas.items() if v is not None]
+            if len(colunas_encontradas) < 3:
+                mensagem = f"Colunas encontradas: {', '.join(colunas_encontradas)}\n"
+                mensagem += f"Colunas na planilha: {', '.join(colunas_originais)}\n\n"
+                mensagem += "Esperadas: Código, Descrição, Unidade"
+                return False, mensagem
             
             # Extrai os materiais
             self.materiais = []

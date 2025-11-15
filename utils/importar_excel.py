@@ -24,7 +24,8 @@ class ImportadorExcel:
             df = pd.read_excel(caminho_arquivo)
             
             # Normaliza nomes de colunas (remove espaços, converte para minúsculas)
-            df.columns = [col.strip().lower().replace(' ', '_') for col in df.columns]
+            colunas_originais = df.columns.tolist()
+            df.columns = [col.strip().lower().replace(' ', '_').replace('ã', 'a').replace('á', 'a').replace('ç', 'c') for col in df.columns]
             
             # Tenta encontrar as colunas mesmo com variações de nome
             mapa_colunas = {
@@ -36,7 +37,7 @@ class ImportadorExcel:
             colunas_presentes = list(df.columns)
             
             for col in colunas_presentes:
-                col_lower = col.lower().replace('ã', 'a').replace('á', 'a')
+                col_lower = col.lower()
                 if 'cod' in col_lower:
                     mapa_colunas['codigo'] = col
                 elif 'desc' in col_lower:
@@ -45,8 +46,12 @@ class ImportadorExcel:
                     mapa_colunas['unidade'] = col
             
             # Valida se encontrou as colunas obrigatórias
-            if not all([mapa_colunas['codigo'], mapa_colunas['descricao'], mapa_colunas['unidade']]):
-                return False, f"Colunas obrigatórias não encontradas. Esperadas: Código, Descrição, Unidade"
+            colunas_encontradas = [k for k, v in mapa_colunas.items() if v is not None]
+            if len(colunas_encontradas) < 3:
+                mensagem = f"Colunas encontradas: {', '.join(colunas_encontradas)}\n"
+                mensagem += f"Colunas na planilha: {', '.join(colunas_originais)}\n\n"
+                mensagem += "Esperadas: Código, Descrição, Unidade"
+                return False, mensagem
             
             # Importa os materiais
             materiais_importados = 0
