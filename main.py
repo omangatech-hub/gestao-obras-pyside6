@@ -10,9 +10,14 @@ from controllers.despesa_controller import DespesaController
 from controllers.despesa_controller import DespesaController as DespCtrl
 from models.evm_model import EVMModel
 from ui.main_window import MainWindow
+from ui.tela_splash import TelaSplash
 
 def main():
     app = QApplication(sys.argv)
+    
+    # Exibe tela de splash
+    splash = TelaSplash.criar_splash(app)
+    timer = TelaSplash.fechar_splash(splash, 3000)  # 3 segundos
 
     # DB
     db = Database()
@@ -38,7 +43,13 @@ def main():
 
     # main window
     win = MainWindow(controllers)
-    win.show()
+    
+    # Mostra a janela principal após o splash fechar
+    def mostrar_janela():
+        win.show()
+    
+    timer.timeout.connect(mostrar_janela)
+    
     sys.exit(app.exec())
 
 if __name__ == "__main__":
