@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import QSplashScreen
-from PySide6.QtGui import QPixmap, QFont, QColor
-from PySide6.QtCore import Qt, QTimer, QScreen
+from PySide6.QtGui import QPixmap, QFont, QColor, QScreen
+from PySide6.QtCore import Qt, QTimer
 import os
 
 class TelaSplash:
