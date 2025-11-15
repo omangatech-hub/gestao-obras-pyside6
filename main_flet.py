@@ -165,27 +165,24 @@ def main(page: ft.Page):
         """Tela de boas-vindas inicial"""
         return ft.Container(
             content=ft.Column([
-                ft.Icon(
-                    ft.Icons.CONSTRUCTION,
-                    size=100,
-                    color=ft.Colors.BLUE_400,
+                # Logo da empresa
+                ft.Image(
+                    src="assets/logo.png",
+                    width=400,
+                    height=250,
+                    fit=ft.ImageFit.CONTAIN,
                 ),
+                ft.Container(height=20),
                 ft.Text(
-                    "Bem-vindo ao Sistema de",
+                    "Sistema de Gestão de Obras",
                     size=32,
-                    weight=ft.FontWeight.W_300,
-                    color=ft.Colors.GREY_700,
-                ),
-                ft.Text(
-                    "Gestão de Obras",
-                    size=48,
                     weight=ft.FontWeight.BOLD,
                     color=ft.Colors.BLUE_700,
                 ),
-                ft.Container(height=30),
+                ft.Container(height=10),
                 ft.Text(
                     "Gerencie suas obras, materiais, compras e muito mais",
-                    size=18,
+                    size=16,
                     color=ft.Colors.GREY_600,
                     text_align=ft.TextAlign.CENTER,
                 ),
@@ -205,7 +202,7 @@ def main(page: ft.Page):
             ], 
             horizontal_alignment=ft.CrossAxisAlignment.CENTER,
             alignment=ft.MainAxisAlignment.CENTER,
-            spacing=10,
+            spacing=5,
             ),
             alignment=ft.alignment.center,
             expand=True,
