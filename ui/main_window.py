@@ -1,5 +1,6 @@
 from PySide6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QPushButton, QHBoxLayout, QLabel, QStackedWidget
 from PySide6.QtGui import QScreen
+from PySide6.QtCore import Qt
 from ui.obras_list import ObrasList
 from ui.materiais_view import MateriaisView
 from ui.compras_view import ComprasView
@@ -16,9 +17,9 @@ class MainWindow(QMainWindow):
         screen: QScreen = self.screen()
         screen_geometry = screen.geometry()
         
-        # Define tamanho como 95% da tela disponível
-        window_width = int(screen_geometry.width() * 0.95)
-        window_height = int(screen_geometry.height() * 0.95)
+        # Define tamanho como 90% da tela disponível (menor que antes)
+        window_width = int(screen_geometry.width() * 0.90)
+        window_height = int(screen_geometry.height() * 0.90)
         self.resize(window_width, window_height)
         
         # Centraliza a janela na tela
@@ -29,20 +30,33 @@ class MainWindow(QMainWindow):
 
         central = QWidget()
         main_layout = QHBoxLayout()
+        main_layout.setContentsMargins(5, 5, 5, 5)  # Reduzir margens
+        main_layout.setSpacing(5)  # Reduzir espaçamento
         central.setLayout(main_layout)
         self.setCentralWidget(central)
 
-        # menu lateral simples
+        # menu lateral simples - mais compacto
         self.menu = QWidget()
         menu_layout = QVBoxLayout()
+        menu_layout.setContentsMargins(2, 2, 2, 2)  # Margens reduzidas
+        menu_layout.setSpacing(3)  # Espaçamento reduzido
         self.menu.setLayout(menu_layout)
+        
         lbl = QLabel("<b>Menu</b>")
+        lbl.setAlignment(Qt.AlignCenter)
         menu_layout.addWidget(lbl)
+        
         self.btnObras = QPushButton("Obras")
+        self.btnObras.setMinimumHeight(35)
         self.btnMateriais = QPushButton("Materiais")
+        self.btnMateriais.setMinimumHeight(35)
         self.btnCompras = QPushButton("Compras")
+        self.btnCompras.setMinimumHeight(35)
         self.btnFinanceiro = QPushButton("Despesas / Financeiro")
+        self.btnFinanceiro.setMinimumHeight(35)
         self.btnEVM = QPushButton("Painel EVM")
+        self.btnEVM.setMinimumHeight(35)
+        
         menu_layout.addWidget(self.btnObras)
         menu_layout.addWidget(self.btnMateriais)
         menu_layout.addWidget(self.btnCompras)
@@ -68,8 +82,8 @@ class MainWindow(QMainWindow):
         evm_page = EVMView(controllers['obra'], controllers['evm'])
         self.pages.addWidget(evm_page)
 
-        main_layout.addWidget(self.menu, 1)
-        main_layout.addWidget(self.pages, 5)
+        main_layout.addWidget(self.menu, 0)  # Menu com tamanho fixo reduzido
+        main_layout.addWidget(self.pages, 1)  # Conteúdo expandido
 
         # ligações
         self.btnObras.clicked.connect(lambda: self.pages.setCurrentIndex(0))
