@@ -13,8 +13,20 @@ class MainWindow(QMainWindow):
         self.controllers = controllers
         self.setWindowTitle("Gestão de Obras - MVP (PySide6)")
         
-        # Abrir em modo maximizado (tela cheia)
-        self.showMaximized()
+        # Abrir em tamanho padrão, não maximizado
+        # 80% da tela, centralizado
+        screen = self.screen()
+        screen_geom = screen.geometry()
+        
+        width = int(screen_geom.width() * 0.80)
+        height = int(screen_geom.height() * 0.80)
+        
+        self.resize(width, height)
+        
+        # Centralizar na tela
+        x = (screen_geom.width() - width) // 2
+        y = (screen_geom.height() - height) // 2
+        self.move(x, y)
 
         central = QWidget()
         main_layout = QHBoxLayout()
@@ -95,5 +107,5 @@ class MainWindow(QMainWindow):
         self.btnEVM.clicked.connect(lambda: self.pages.setCurrentIndex(4))
         
         # Definir largura máxima do menu - aumentado para caber o texto
-        self.menu.setMaximumWidth(180)
-        self.menu.setMinimumWidth(180)
+        self.menu.setMaximumWidth(200)
+        self.menu.setMinimumWidth(200)
