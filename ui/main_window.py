@@ -12,14 +12,7 @@ class MainWindow(QMainWindow):
         super().__init__()
         self.controllers = controllers
         self.setWindowTitle("Gestão de Obras - MVP (PySide6)")
-        
-        # Obter tamanho da tela (monitor) - área UTILIZÁVEL (sem barra de tarefas)
-        screen = self.screen()
-        screen_geom = screen.availableGeometry()  # Área disponível (sem taskbar)
-        
-        # Abrir com o tamanho DISPONÍVEL da tela
-        self.resize(screen_geom.width(), screen_geom.height())
-        self.move(screen_geom.x(), screen_geom.y())
+        self.resize(1100, 700)
 
         central = QWidget()
         main_layout = QHBoxLayout()
