@@ -18,7 +18,7 @@ class TelaSplash:
         else:
             # Se não existir imagem, cria um fundo padrão
             pixmap = QPixmap(800, 600)
-            pixmap.fill(QColor(41, 128, 185))  # Azul
+            pixmap.fill(QColor(255, 255, 255))  # Branco
         
         splash = QSplashScreen(pixmap)
         splash.show()
