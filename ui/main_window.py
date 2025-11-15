@@ -1,5 +1,6 @@
 from PySide6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QPushButton, QHBoxLayout, QLabel, QStackedWidget
 from PySide6.QtCore import Qt
+from PySide6.QtGui import QFont
 from ui.obras_list import ObrasList
 from ui.materiais_view import MateriaisView
 from ui.compras_view import ComprasView
@@ -33,16 +34,30 @@ class MainWindow(QMainWindow):
         lbl.setAlignment(Qt.AlignCenter)
         menu_layout.addWidget(lbl)
         
+        # Criar font pequena para os botões
+        font_pequena = QFont()
+        font_pequena.setPointSize(8)
+        
         self.btnObras = QPushButton("Obras")
-        self.btnObras.setMinimumHeight(35)
+        self.btnObras.setFont(font_pequena)
+        self.btnObras.setMinimumHeight(30)
+        self.btnObras.setMaximumHeight(30)
         self.btnMateriais = QPushButton("Materiais")
-        self.btnMateriais.setMinimumHeight(35)
+        self.btnMateriais.setFont(font_pequena)
+        self.btnMateriais.setMinimumHeight(30)
+        self.btnMateriais.setMaximumHeight(30)
         self.btnCompras = QPushButton("Compras")
-        self.btnCompras.setMinimumHeight(35)
+        self.btnCompras.setFont(font_pequena)
+        self.btnCompras.setMinimumHeight(30)
+        self.btnCompras.setMaximumHeight(30)
         self.btnFinanceiro = QPushButton("Despesas / Financeiro")
-        self.btnFinanceiro.setMinimumHeight(35)
+        self.btnFinanceiro.setFont(font_pequena)
+        self.btnFinanceiro.setMinimumHeight(30)
+        self.btnFinanceiro.setMaximumHeight(30)
         self.btnEVM = QPushButton("Painel EVM")
-        self.btnEVM.setMinimumHeight(35)
+        self.btnEVM.setFont(font_pequena)
+        self.btnEVM.setMinimumHeight(30)
+        self.btnEVM.setMaximumHeight(30)
         
         menu_layout.addWidget(self.btnObras)
         menu_layout.addWidget(self.btnMateriais)
@@ -78,3 +93,6 @@ class MainWindow(QMainWindow):
         self.btnCompras.clicked.connect(lambda: self.pages.setCurrentIndex(2))
         self.btnFinanceiro.clicked.connect(lambda: self.pages.setCurrentIndex(3))
         self.btnEVM.clicked.connect(lambda: self.pages.setCurrentIndex(4))
+        
+        # Definir largura máxima do menu
+        self.menu.setMaximumWidth(120)
