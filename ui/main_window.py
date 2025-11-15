@@ -1,5 +1,4 @@
 from PySide6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QPushButton, QHBoxLayout, QLabel, QStackedWidget
-from PySide6.QtGui import QScreen
 from PySide6.QtCore import Qt
 from ui.obras_list import ObrasList
 from ui.materiais_view import MateriaisView
@@ -13,20 +12,8 @@ class MainWindow(QMainWindow):
         self.controllers = controllers
         self.setWindowTitle("Gestão de Obras - MVP (PySide6)")
         
-        # Configurar janela responsiva - tamanho baseado na tela do monitor
-        screen: QScreen = self.screen()
-        screen_geometry = screen.geometry()
-        
-        # Define tamanho como 90% da tela disponível (menor que antes)
-        window_width = int(screen_geometry.width() * 0.90)
-        window_height = int(screen_geometry.height() * 0.90)
-        self.resize(window_width, window_height)
-        
-        # Centraliza a janela na tela
-        self.move(
-            int((screen_geometry.width() - window_width) / 2),
-            int((screen_geometry.height() - window_height) / 2)
-        )
+        # Abrir em modo maximizado (tela cheia)
+        self.showMaximized()
 
         central = QWidget()
         main_layout = QHBoxLayout()
