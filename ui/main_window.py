@@ -12,7 +12,7 @@ class MainWindow(QMainWindow):
         super().__init__()
         self.controllers = controllers
         self.setWindowTitle("Gestão de Obras - MVP (PySide6)")
-        self.resize(1100, 700)
+        self.resize(1200, 1080)
 
         central = QWidget()
         main_layout = QHBoxLayout()
