@@ -13,20 +13,13 @@ class MainWindow(QMainWindow):
         self.controllers = controllers
         self.setWindowTitle("Gestão de Obras - MVP (PySide6)")
         
-        # Abrir em tamanho padrão, não maximizado
-        # 80% da tela, centralizado
+        # Obter tamanho da tela (monitor)
         screen = self.screen()
         screen_geom = screen.geometry()
         
-        width = int(screen_geom.width() * 0.80)
-        height = int(screen_geom.height() * 0.80)
-        
-        self.resize(width, height)
-        
-        # Centralizar na tela
-        x = (screen_geom.width() - width) // 2
-        y = (screen_geom.height() - height) // 2
-        self.move(x, y)
+        # Abrir com o tamanho TOTAL da tela
+        self.resize(screen_geom.width(), screen_geom.height())
+        self.move(screen_geom.x(), screen_geom.y())
 
         central = QWidget()
         main_layout = QHBoxLayout()
