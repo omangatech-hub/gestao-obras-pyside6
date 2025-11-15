@@ -1,4 +1,5 @@
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QTableWidget, QTableWidgetItem, QDialog, QFormLayout, QLineEdit, QDoubleSpinBox, QMessageBox
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QTableWidget, QTableWidgetItem, QDialog, QFormLayout, QLineEdit, QDoubleSpinBox, QMessageBox, QFileDialog
+from utils.importar_excel import ImportadorExcel
 
 class MateriaisView(QWidget):
     def __init__(self, material_controller, parent=None):
@@ -8,7 +9,11 @@ class MateriaisView(QWidget):
         h = QHBoxLayout()
         self.btnNovo = QPushButton("Novo Material")
         self.btnRefresh = QPushButton("Atualizar")
+        self.btnImportar = QPushButton("Importar Excel")
+        self.btnExportarModelo = QPushButton("Baixar Modelo")
         h.addWidget(self.btnNovo)
+        h.addWidget(self.btnImportar)
+        h.addWidget(self.btnExportarModelo)
         h.addWidget(self.btnRefresh)
         self.layout.addLayout(h)
 
@@ -20,6 +25,8 @@ class MateriaisView(QWidget):
 
         self.btnNovo.clicked.connect(self.novo_material)
         self.btnRefresh.clicked.connect(self.load)
+        self.btnImportar.clicked.connect(self.importar_excel)
+        self.btnExportarModelo.clicked.connect(self.exportar_modelo)
         self.table.cellDoubleClicked.connect(self.editar_material)
 
         self.load()
@@ -115,4 +122,43 @@ class MateriaisView(QWidget):
         btnSalvar.clicked.connect(update)
         btnCancelar.clicked.connect(dlg.reject)
         dlg.exec()
+
+    def importar_excel(self):
+        """Abre diálogo para selecionar arquivo Excel"""
+        arquivo, _ = QFileDialog.getOpenFileName(
+            self,
+            "Selecione o arquivo Excel",
+            "",
+            "Arquivos Excel (*.xlsx *.xls);;Todos os arquivos (*.*)"
+        )
+        
+        if not arquivo:
+            return
+        
+        sucesso, mensagem = ImportadorExcel.importar_materiais(arquivo, self.material_controller)
+        
+        if sucesso:
+            QMessageBox.information(self, "Sucesso", mensagem)
+            self.load()
+        else:
+            QMessageBox.critical(self, "Erro na Importação", mensagem)
+
+    def exportar_modelo(self):
+        """Exporta um modelo de Excel para download"""
+        caminho, _ = QFileDialog.getSaveFileName(
+            self,
+            "Salvar modelo Excel",
+            "modelo_materiais.xlsx",
+            "Arquivos Excel (*.xlsx)"
+        )
+        
+        if not caminho:
+            return
+        
+        sucesso, mensagem = ImportadorExcel.exportar_modelo_excel(caminho)
+        
+        if sucesso:
+            QMessageBox.information(self, "Sucesso", mensagem)
+        else:
+            QMessageBox.critical(self, "Erro", mensagem)
 
