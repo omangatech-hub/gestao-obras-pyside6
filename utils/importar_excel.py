@@ -25,7 +25,7 @@ class ImportadorExcel:
             
             # Normaliza nomes de colunas (remove espaços, converte para minúsculas)
             colunas_originais = df.columns.tolist()
-            df.columns = [col.strip().lower().replace(' ', '_') for col in df.columns]
+            df.columns = [col.strip().lower() for col in df.columns]
             
             # Tenta encontrar as colunas mesmo com variações de nome
             mapa_colunas = {
@@ -36,15 +36,26 @@ class ImportadorExcel:
             
             colunas_presentes = list(df.columns)
             
+            # Debug
+            import sys
+            print(f"DEBUG - Colunas presentes: {colunas_presentes}", file=sys.stderr)
+            
             for col in colunas_presentes:
-                col_lower = col.lower().replace('ã', 'a').replace('á', 'a').replace('ç', 'c')
+                col_lower = col.lower().replace('ã', 'a').replace('á', 'a').replace('ç', 'c').replace('é', 'e')
+                print(f"DEBUG - Testando coluna: '{col}' -> '{col_lower}'", file=sys.stderr)
+                
                 # Verifica por padrões de coluna
-                if 'cod' in col_lower or col == 'codigo':
+                if 'cod' in col_lower:
+                    print(f"DEBUG - Encontrado CÓDIGO: {col}", file=sys.stderr)
                     mapa_colunas['codigo'] = col
-                elif 'desc' in col_lower or col == 'descricao':
+                elif 'desc' in col_lower:
+                    print(f"DEBUG - Encontrado DESCRIÇÃO: {col}", file=sys.stderr)
                     mapa_colunas['descricao'] = col
-                elif 'unid' in col_lower or col == 'unidade':
+                elif 'unid' in col_lower:
+                    print(f"DEBUG - Encontrado UNIDADE: {col}", file=sys.stderr)
                     mapa_colunas['unidade'] = col
+            
+            print(f"DEBUG - Mapa final: {mapa_colunas}", file=sys.stderr)
             
             # Valida se encontrou as colunas obrigatórias
             colunas_encontradas = [k for k, v in mapa_colunas.items() if v is not None]
