@@ -148,16 +148,279 @@ def main(page: ft.Page):
         )
     
     def criar_view_obras():
+        """View de Obras com design moderno"""
+        
+        obras_data = ft.DataTable(
+            columns=[
+                ft.DataColumn(ft.Text("ID", weight=ft.FontWeight.BOLD)),
+                ft.DataColumn(ft.Text("Nome", weight=ft.FontWeight.BOLD)),
+                ft.DataColumn(ft.Text("Cliente", weight=ft.FontWeight.BOLD)),
+                ft.DataColumn(ft.Text("Início", weight=ft.FontWeight.BOLD)),
+                ft.DataColumn(ft.Text("Fim Previsto", weight=ft.FontWeight.BOLD)),
+                ft.DataColumn(ft.Text("Valor", weight=ft.FontWeight.BOLD)),
+            ],
+            rows=[],
+            border=ft.border.all(1, ft.Colors.GREY_300),
+            border_radius=10,
+            vertical_lines=ft.BorderSide(1, ft.Colors.GREY_200),
+            horizontal_lines=ft.BorderSide(1, ft.Colors.GREY_200),
+        )
+        
+        def carregar_obras():
+            obras = obra_ctrl.listar_obras()
+            obras_data.rows.clear()
+            
+            for o in obras:
+                obras_data.rows.append(
+                    ft.DataRow(
+                        cells=[
+                            ft.DataCell(ft.Text(str(o.get("id", "")))),
+                            ft.DataCell(ft.Text(str(o.get("nome", "")))),
+                            ft.DataCell(ft.Text(str(o.get("cliente", "")))),
+                            ft.DataCell(ft.Text(str(o.get("inicio", "")))),
+                            ft.DataCell(ft.Text(str(o.get("fim_previsto", "")))),
+                            ft.DataCell(ft.Text(f"R$ {o.get('valor', 0):,.2f}")),
+                        ]
+                    )
+                )
+            page.update()
+        
+        def abrir_dialog_nova_obra(e):
+            nome_field = ft.TextField(label="Nome da Obra", width=300)
+            cliente_field = ft.TextField(label="Cliente", width=300)
+            inicio_field = ft.TextField(label="Data Início (AAAA-MM-DD)", width=300)
+            fim_field = ft.TextField(label="Fim Previsto (AAAA-MM-DD)", width=300)
+            valor_field = ft.TextField(label="Valor", width=300)
+            
+            def salvar_obra(e):
+                if nome_field.value and cliente_field.value:
+                    obra_ctrl.criar_obra(
+                        nome_field.value,
+                        cliente_field.value,
+                        inicio_field.value or None,
+                        fim_field.value or None,
+                        float(valor_field.value) if valor_field.value else 0
+                    )
+                    dialog.open = False
+                    carregar_obras()
+                    page.show_snack_bar(
+                        ft.SnackBar(ft.Text("Obra criada com sucesso!"), bgcolor=ft.Colors.GREEN)
+                    )
+                    page.update()
+            
+            dialog = ft.AlertDialog(
+                title=ft.Text("Nova Obra"),
+                content=ft.Column([
+                    nome_field,
+                    cliente_field,
+                    inicio_field,
+                    fim_field,
+                    valor_field,
+                ], tight=True, spacing=20),
+                actions=[
+                    ft.TextButton("Cancelar", on_click=lambda e: fechar_dialog()),
+                    ft.ElevatedButton("Salvar", on_click=salvar_obra),
+                ],
+            )
+            
+            def fechar_dialog():
+                dialog.open = False
+                page.update()
+            
+            page.overlay.append(dialog)
+            dialog.open = True
+            page.update()
+        
+        carregar_obras()
+        
         return ft.Container(
-            content=ft.Text("Obras - Em construção", size=30),
-            alignment=ft.alignment.center,
+            content=ft.Column([
+                ft.Container(
+                    content=ft.Row([
+                        ft.Text("Obras", size=24, weight=ft.FontWeight.BOLD),
+                        ft.Row([
+                            ft.ElevatedButton(
+                                "Nova Obra",
+                                icon=ft.Icons.ADD,
+                                on_click=abrir_dialog_nova_obra,
+                            ),
+                            ft.ElevatedButton(
+                                "Atualizar",
+                                icon=ft.Icons.REFRESH,
+                                on_click=lambda e: carregar_obras(),
+                            ),
+                        ], spacing=10),
+                    ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN),
+                    padding=20,
+                    bgcolor=ft.Colors.ORANGE_50,
+                    border_radius=10,
+                ),
+                ft.Container(
+                    content=ft.Column([
+                        obras_data,
+                    ], scroll=ft.ScrollMode.AUTO),
+                    padding=20,
+                    expand=True,
+                ),
+            ]),
             expand=True,
         )
     
     def criar_view_compras():
+        """View de Compras com design moderno"""
+        
+        compras_data = ft.DataTable(
+            columns=[
+                ft.DataColumn(ft.Text("ID", weight=ft.FontWeight.BOLD)),
+                ft.DataColumn(ft.Text("Material", weight=ft.FontWeight.BOLD)),
+                ft.DataColumn(ft.Text("Qtd", weight=ft.FontWeight.BOLD)),
+                ft.DataColumn(ft.Text("Fornecedor", weight=ft.FontWeight.BOLD)),
+                ft.DataColumn(ft.Text("Data", weight=ft.FontWeight.BOLD)),
+                ft.DataColumn(ft.Text("Valor", weight=ft.FontWeight.BOLD)),
+                ft.DataColumn(ft.Text("Status", weight=ft.FontWeight.BOLD)),
+            ],
+            rows=[],
+            border=ft.border.all(1, ft.Colors.GREY_300),
+            border_radius=10,
+            vertical_lines=ft.BorderSide(1, ft.Colors.GREY_200),
+            horizontal_lines=ft.BorderSide(1, ft.Colors.GREY_200),
+        )
+        
+        def carregar_compras():
+            compras = compra_ctrl.listar()
+            compras_data.rows.clear()
+            
+            for c in compras:
+                compras_data.rows.append(
+                    ft.DataRow(
+                        cells=[
+                            ft.DataCell(ft.Text(str(c.get("id", "")))),
+                            ft.DataCell(ft.Text(str(c.get("material", "")))),
+                            ft.DataCell(ft.Text(str(c.get("quantidade", "")))),
+                            ft.DataCell(ft.Text(str(c.get("fornecedor", "")))),
+                            ft.DataCell(ft.Text(str(c.get("data_compra", "")))),
+                            ft.DataCell(ft.Text(f"R$ {c.get('valor_total', 0):,.2f}")),
+                            ft.DataCell(ft.Text(str(c.get("status", "")))),
+                        ]
+                    )
+                )
+            page.update()
+        
+        carregar_compras()
+        
         return ft.Container(
-            content=ft.Text("Compras - Em construção", size=30),
-            alignment=ft.alignment.center,
+            content=ft.Column([
+                ft.Container(
+                    content=ft.Row([
+                        ft.Text("Compras", size=24, weight=ft.FontWeight.BOLD),
+                        ft.ElevatedButton(
+                            "Atualizar",
+                            icon=ft.Icons.REFRESH,
+                            on_click=lambda e: carregar_compras(),
+                        ),
+                    ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN),
+                    padding=20,
+                    bgcolor=ft.Colors.GREEN_50,
+                    border_radius=10,
+                ),
+                ft.Container(
+                    content=ft.Column([
+                        compras_data,
+                    ], scroll=ft.ScrollMode.AUTO),
+                    padding=20,
+                    expand=True,
+                ),
+            ]),
+            expand=True,
+        )
+    
+    def criar_view_financeiro():
+        """View de Despesas/Financeiro com design moderno"""
+        
+        despesas_data = ft.DataTable(
+            columns=[
+                ft.DataColumn(ft.Text("ID", weight=ft.FontWeight.BOLD)),
+                ft.DataColumn(ft.Text("Descrição", weight=ft.FontWeight.BOLD)),
+                ft.DataColumn(ft.Text("Valor", weight=ft.FontWeight.BOLD)),
+                ft.DataColumn(ft.Text("Data", weight=ft.FontWeight.BOLD)),
+                ft.DataColumn(ft.Text("Obra", weight=ft.FontWeight.BOLD)),
+            ],
+            rows=[],
+            border=ft.border.all(1, ft.Colors.GREY_300),
+            border_radius=10,
+            vertical_lines=ft.BorderSide(1, ft.Colors.GREY_200),
+            horizontal_lines=ft.BorderSide(1, ft.Colors.GREY_200),
+        )
+        
+        def carregar_despesas():
+            despesas = despesa_ctrl.listar()
+            despesas_data.rows.clear()
+            
+            for d in despesas:
+                despesas_data.rows.append(
+                    ft.DataRow(
+                        cells=[
+                            ft.DataCell(ft.Text(str(d.get("id", "")))),
+                            ft.DataCell(ft.Text(str(d.get("descricao", "")))),
+                            ft.DataCell(ft.Text(f"R$ {d.get('valor', 0):,.2f}")),
+                            ft.DataCell(ft.Text(str(d.get("data_despesa", "")))),
+                            ft.DataCell(ft.Text(str(d.get("obra", "")))),
+                        ]
+                    )
+                )
+            page.update()
+        
+        carregar_despesas()
+        
+        return ft.Container(
+            content=ft.Column([
+                ft.Container(
+                    content=ft.Row([
+                        ft.Text("Despesas / Financeiro", size=24, weight=ft.FontWeight.BOLD),
+                        ft.ElevatedButton(
+                            "Atualizar",
+                            icon=ft.Icons.REFRESH,
+                            on_click=lambda e: carregar_despesas(),
+                        ),
+                    ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN),
+                    padding=20,
+                    bgcolor=ft.Colors.RED_50,
+                    border_radius=10,
+                ),
+                ft.Container(
+                    content=ft.Column([
+                        despesas_data,
+                    ], scroll=ft.ScrollMode.AUTO),
+                    padding=20,
+                    expand=True,
+                ),
+            ]),
+            expand=True,
+        )
+    
+    def criar_view_evm():
+        """View de EVM (Análise de Valor Agregado)"""
+        return ft.Container(
+            content=ft.Column([
+                ft.Container(
+                    content=ft.Text("Painel EVM", size=24, weight=ft.FontWeight.BOLD),
+                    padding=20,
+                    bgcolor=ft.Colors.PURPLE_50,
+                    border_radius=10,
+                ),
+                ft.Container(
+                    content=ft.Column([
+                        ft.Icon(ft.Icons.ANALYTICS, size=80, color=ft.Colors.PURPLE_300),
+                        ft.Text("Análise de Valor Agregado", size=20, weight=ft.FontWeight.BOLD),
+                        ft.Text("Em desenvolvimento...", size=16, color=ft.Colors.GREY_600),
+                    ], 
+                    horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                    alignment=ft.MainAxisAlignment.CENTER,
+                    spacing=20),
+                    expand=True,
+                    alignment=ft.alignment.center,
+                ),
+            ]),
             expand=True,
         )
     
@@ -216,6 +479,10 @@ def main(page: ft.Page):
             content_area.content = criar_view_materiais()
         elif index == 3:
             content_area.content = criar_view_compras()
+        elif index == 4:
+            content_area.content = criar_view_financeiro()
+        elif index == 5:
+            content_area.content = criar_view_evm()
         
         page.update()
     
