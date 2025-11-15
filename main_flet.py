@@ -353,7 +353,7 @@ def main(page: ft.Page):
         )
         
         def carregar_despesas():
-            despesas = despesa_ctrl.listar()
+            despesas = despesa_ctrl.listar_todas()
             despesas_data.rows.clear()
             
             for d in despesas:
