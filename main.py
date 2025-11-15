@@ -17,7 +17,6 @@ def main():
     
     # Exibe tela de splash
     splash = TelaSplash.criar_splash(app)
-    timer = TelaSplash.fechar_splash(splash, 3000)  # 3 segundos
 
     # DB
     db = Database()
@@ -44,11 +43,15 @@ def main():
     # main window
     win = MainWindow(controllers)
     
-    # Mostra a janela principal após o splash fechar
+    # Fecha splash e mostra janela principal após 3 segundos
+    from PySide6.QtCore import QTimer
+    timer = QTimer()
     def mostrar_janela():
+        splash.close()
         win.show()
-    
+        timer.stop()
     timer.timeout.connect(mostrar_janela)
+    timer.start(3000)  # 3 segundos
     
     sys.exit(app.exec())
 
