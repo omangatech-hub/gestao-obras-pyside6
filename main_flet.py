@@ -186,19 +186,6 @@ def main(page: ft.Page):
                     color=ft.Colors.GREY_600,
                     text_align=ft.TextAlign.CENTER,
                 ),
-                ft.Container(height=40),
-                ft.Row([
-                    ft.ElevatedButton(
-                        "Começar",
-                        icon=ft.Icons.ARROW_FORWARD,
-                        on_click=lambda e: mudar_pagina(2),
-                        style=ft.ButtonStyle(
-                            color=ft.Colors.WHITE,
-                            bgcolor=ft.Colors.BLUE_700,
-                            padding=20,
-                        ),
-                    ),
-                ], alignment=ft.MainAxisAlignment.CENTER),
             ], 
             horizontal_alignment=ft.CrossAxisAlignment.CENTER,
             alignment=ft.MainAxisAlignment.CENTER,
