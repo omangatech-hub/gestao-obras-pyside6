@@ -15,9 +15,9 @@ class GerenciadorExcel:
             self.caminho_arquivo = caminho_arquivo
             self.df = pd.read_excel(caminho_arquivo)
             
-            # Normaliza nomes de colunas
+            # Normaliza nomes de colunas - remove acentos PRIMEIRO, depois minúsculas
             colunas_originais = self.df.columns.tolist()
-            self.df.columns = [col.strip().lower().replace(' ', '_') for col in self.df.columns]
+            self.df.columns = [col.strip().lower().replace('ã', 'a').replace('á', 'a').replace('ç', 'c').replace('é', 'e').replace('ó', 'o') for col in self.df.columns]
             
             # Encontra as colunas
             colunas_presentes = list(self.df.columns)
@@ -28,13 +28,13 @@ class GerenciadorExcel:
             }
             
             for col in colunas_presentes:
-                col_lower = col.lower().replace('ã', 'a').replace('á', 'a').replace('ç', 'c')
-                # Verifica por padrões de coluna
-                if 'cod' in col_lower or col == 'codigo':
+                col_lower = col.lower()
+                # Verifica por padrões de coluna (acentos já removidos)
+                if 'cod' in col_lower:
                     mapa_colunas['codigo'] = col
-                elif 'desc' in col_lower or col == 'descricao':
+                elif 'desc' in col_lower:
                     mapa_colunas['descricao'] = col
-                elif 'unid' in col_lower or col == 'unidade':
+                elif 'unid' in col_lower:
                     mapa_colunas['unidade'] = col
             
             colunas_encontradas = [k for k, v in mapa_colunas.items() if v is not None]

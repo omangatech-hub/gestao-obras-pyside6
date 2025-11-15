@@ -23,9 +23,9 @@ class ImportadorExcel:
         try:
             df = pd.read_excel(caminho_arquivo)
             
-            # Normaliza nomes de colunas (remove espaços, converte para minúsculas)
+            # Normaliza nomes de colunas (remove espaços, converte para minúsculas, remove acentos)
             colunas_originais = df.columns.tolist()
-            df.columns = [col.strip().lower() for col in df.columns]
+            df.columns = [col.strip().lower().replace('ã', 'a').replace('á', 'a').replace('ç', 'c').replace('é', 'e').replace('ó', 'o') for col in df.columns]
             
             # Tenta encontrar as colunas mesmo com variações de nome
             mapa_colunas = {
@@ -41,10 +41,10 @@ class ImportadorExcel:
             print(f"DEBUG - Colunas presentes: {colunas_presentes}", file=sys.stderr)
             
             for col in colunas_presentes:
-                col_lower = col.lower().replace('ã', 'a').replace('á', 'a').replace('ç', 'c').replace('é', 'e')
+                col_lower = col.lower()
                 print(f"DEBUG - Testando coluna: '{col}' -> '{col_lower}'", file=sys.stderr)
                 
-                # Verifica por padrões de coluna
+                # Verifica por padrões de coluna (agora os acentos já foram removidos)
                 if 'cod' in col_lower:
                     print(f"DEBUG - Encontrado CÓDIGO: {col}", file=sys.stderr)
                     mapa_colunas['codigo'] = col
