@@ -25,7 +25,7 @@ class ImportadorExcel:
             
             # Normaliza nomes de colunas (remove espaços, converte para minúsculas)
             colunas_originais = df.columns.tolist()
-            df.columns = [col.strip().lower().replace(' ', '_').replace('ã', 'a').replace('á', 'a').replace('ç', 'c') for col in df.columns]
+            df.columns = [col.strip().lower().replace(' ', '_') for col in df.columns]
             
             # Tenta encontrar as colunas mesmo com variações de nome
             mapa_colunas = {
@@ -37,13 +37,13 @@ class ImportadorExcel:
             colunas_presentes = list(df.columns)
             
             for col in colunas_presentes:
-                col_lower = col.lower()
+                col_lower = col.lower().replace('ã', 'a').replace('á', 'a').replace('ç', 'c')
                 # Verifica por padrões de coluna
-                if 'cod' in col_lower or col_lower == 'codigo':
+                if 'cod' in col_lower or col == 'codigo':
                     mapa_colunas['codigo'] = col
-                elif 'desc' in col_lower or col_lower == 'descricao':
+                elif 'desc' in col_lower or col == 'descricao':
                     mapa_colunas['descricao'] = col
-                elif 'unid' in col_lower or col_lower == 'unidade':
+                elif 'unid' in col_lower or col == 'unidade':
                     mapa_colunas['unidade'] = col
             
             # Valida se encontrou as colunas obrigatórias

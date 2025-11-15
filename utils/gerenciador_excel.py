@@ -17,7 +17,7 @@ class GerenciadorExcel:
             
             # Normaliza nomes de colunas
             colunas_originais = self.df.columns.tolist()
-            self.df.columns = [col.strip().lower().replace(' ', '_').replace('ã', 'a').replace('á', 'a').replace('ç', 'c') for col in self.df.columns]
+            self.df.columns = [col.strip().lower().replace(' ', '_') for col in self.df.columns]
             
             # Encontra as colunas
             colunas_presentes = list(self.df.columns)
@@ -28,13 +28,13 @@ class GerenciadorExcel:
             }
             
             for col in colunas_presentes:
-                col_lower = col.lower()
+                col_lower = col.lower().replace('ã', 'a').replace('á', 'a').replace('ç', 'c')
                 # Verifica por padrões de coluna
-                if 'cod' in col_lower or col_lower == 'codigo':
+                if 'cod' in col_lower or col == 'codigo':
                     mapa_colunas['codigo'] = col
-                elif 'desc' in col_lower or col_lower == 'descricao':
+                elif 'desc' in col_lower or col == 'descricao':
                     mapa_colunas['descricao'] = col
-                elif 'unid' in col_lower or col_lower == 'unidade':
+                elif 'unid' in col_lower or col == 'unidade':
                     mapa_colunas['unidade'] = col
             
             colunas_encontradas = [k for k, v in mapa_colunas.items() if v is not None]
