@@ -26,7 +26,7 @@ def main():
     atividade_ctrl = AtividadeController(db)
     medicao_ctrl = MedicaoController(db)
     material_ctrl = MaterialController(db)
-    compra_ctrl = CompraController(db)
+    compra_ctrl = CompraController(db, material_ctrl, obra_ctrl)
     despesa_ctrl = DespesaController(db)
     evm_model = EVMModel(db)
 

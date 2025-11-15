@@ -19,12 +19,10 @@ class ComprasView(QWidget):
         form = QHBoxLayout()
 
         self.combo_material = QComboBox()
-        for m in self.material_controller.listar():
-            self.combo_material.addItem(m.get("descricao"), m.get("id"))
+        self.carregar_materiais()
 
         self.combo_obra = QComboBox()
-        for o in self.obra_controller.listar_obras():
-            self.combo_obra.addItem(o.get("nome"), o.get("id"))
+        self.carregar_obras()
 
         self.input_qtd = QLineEdit()
         self.input_fornecedor = QLineEdit()
@@ -67,6 +65,24 @@ class ComprasView(QWidget):
         self.setLayout(layout)
         self.carregar_tabela()
 
+    def carregar_materiais(self):
+        """Carrega lista de materiais no combo"""
+        self.combo_material.clear()
+        materiais = self.material_controller.listar()
+        for m in materiais:
+            descricao = m.get("descricao", "")
+            codigo = m.get("codigo", "")
+            if codigo:
+                descricao = f"[{codigo}] {descricao}"
+            self.combo_material.addItem(descricao, m.get("id"))
+
+    def carregar_obras(self):
+        """Carrega lista de obras no combo"""
+        self.combo_obra.clear()
+        obras = self.obra_controller.listar_obras()
+        for o in obras:
+            self.combo_obra.addItem(o.get("nome"), o.get("id"))
+
     def registrar_compra(self):
         try:
             material = self.combo_material.currentData()
@@ -99,3 +115,7 @@ class ComprasView(QWidget):
             self.table.setItem(i, 5, QTableWidgetItem(str(c.get("valor_total"))))
             self.table.setItem(i, 6, QTableWidgetItem(str(c.get("status"))))
             self.table.setItem(i, 7, QTableWidgetItem(str(c.get("obra"))))
+        
+        # Recarregar materiais e obras quando atualiza tabela
+        self.carregar_materiais()
+        self.carregar_obras()
