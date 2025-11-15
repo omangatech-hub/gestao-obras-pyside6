@@ -5,7 +5,7 @@ class MaterialController:
         self.model = MaterialModel(db)
 
     def criar_material(self, codigo, descricao, unidade):
-        return self.model.create(codigo, descricao, unidade)
+        return self.model.criar_material(codigo, descricao, unidade)
 
     def listar(self):
         return self.model.get_all()

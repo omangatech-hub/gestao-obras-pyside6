@@ -29,11 +29,12 @@ class GerenciadorExcel:
             
             for col in colunas_presentes:
                 col_lower = col.lower()
-                if 'cod' in col_lower:
+                # Verifica por padrões de coluna
+                if 'cod' in col_lower or col_lower == 'codigo':
                     mapa_colunas['codigo'] = col
-                elif 'desc' in col_lower:
+                elif 'desc' in col_lower or col_lower == 'descricao':
                     mapa_colunas['descricao'] = col
-                elif 'unid' in col_lower:
+                elif 'unid' in col_lower or col_lower == 'unidade':
                     mapa_colunas['unidade'] = col
             
             colunas_encontradas = [k for k, v in mapa_colunas.items() if v is not None]
